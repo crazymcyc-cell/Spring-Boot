@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
-@CrossOrigin(origins = "*") // Permite o React acessar a API localmente
 public class TaskController {
 
     @Autowired

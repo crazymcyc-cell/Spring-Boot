@@ -16,8 +16,8 @@ const STATUS = {
   CONCLUIDA: "CONCLUIDA",
 };
 
-// URL do Backend rodando localmente
-const API_URL = "https://spring-boot-i9mm.onrender.com";
+// URL do Backend rodando online (Render)
+const API_URL = "https://spring-boot-i9mm.onrender.com/api/tasks";
 
 export default function App() {
   const [tasks, setTasks] = useState([]);
