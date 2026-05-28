@@ -1,14 +1,20 @@
 # 🚀 TaskFlow - Gerenciador de Tarefas Full Stack
 
+> 🟢 **Live Demo:** [Acesse a aplicação rodando aqui!](https://spring-boot-delta.vercel.app/)
+
 Um sistema moderno de gerenciamento de tarefas estilo Kanban, desenvolvido para demonstrar habilidades no desenvolvimento Full Stack utilizando o ecossistema Spring (Java) no backend e React no frontend.
 
 ## ✨ Funcionalidades
 
 - **CRUD Completo:** Crie, leia, atualize e delete tarefas.
+
 - **Kanban Board:** Organize tarefas por status (Pendente, Em Andamento, Concluída).
+
 - **API RESTful:** Backend estruturado seguindo as melhores práticas REST.
+
 - **Design Responsivo:** Interface moderna e acessível desenvolvida com Tailwind CSS.
-- **CORS Configurado:** Comunicação fluida entre diferentes domínios (Frontend e Backend).
+
+- **Deploy Integrado:** Backend rodando via Docker no Render e Frontend na Vercel.
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -16,8 +22,8 @@ Um sistema moderno de gerenciamento de tarefas estilo Kanban, desenvolvido para 
 
 - **Java 21**
 - **Spring Boot 3** (Web, Data JPA, Validation)
-- **H2 Database** (Banco de dados em memória para fácil teste, configurável para PostgreSQL/MySQL)
-- **Lombok** (Redução de boilerplate)
+- **H2 Database** (Banco de dados em memória para fácil teste)
+- **Docker** (Containerização para deploy)
 - **Maven** (Gerenciamento de dependências)
 
 ### Frontend
@@ -32,18 +38,18 @@ Um sistema moderno de gerenciamento de tarefas estilo Kanban, desenvolvido para 
 ### 1. Clonando o repositório
 
 ```bash
-git clone https://github.com/SEU_USUARIO/taskflow.git
+git clone [https://github.com/crazymcyc-cell/Spring-Boot.git](https://github.com/crazymcyc-cell/Spring-Boot.git)
 cd taskflow
 ```
 
 ### 2. Rodando o Backend (Spring Boot)
 
 1. Navegue até a pasta `backend`.
-2. Certifique-se de ter o Java 21+ e o Maven instalados.
-3. Execute o comando:
+
+2. Execute o servidor:
 
 ```bash
-mvn spring-boot:run
+./mvnw spring-boot:run
 ```
 
 > O servidor iniciará na porta `8080`. (Acesso ao banco H2: `http://localhost:8080/h2-console`)
@@ -51,6 +57,7 @@ mvn spring-boot:run
 ### 3. Rodando o Frontend (React)
 
 1. Navegue até a pasta `frontend`.
+
 2. Instale as dependências:
 
 ```bash
