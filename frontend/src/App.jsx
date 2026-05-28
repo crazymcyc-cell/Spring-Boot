@@ -16,81 +16,52 @@ const STATUS = {
   CONCLUIDA: "CONCLUIDA",
 };
 
-// Frontend App - Interativo e Responsivo
+// URL do Backend rodando localmente
+const API_URL = "http://localhost:8080/api/tasks";
+
 export default function App() {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // NOTA PARA O GITHUB: Em seu projeto real, você usará os blocos "fetch" comentados abaixo.
-  // Para fins de demonstração neste ambiente de preview, usamos mock de dados e estado local.
-
+  // 1. Buscar tarefas do Banco de Dados (GET)
   useEffect(() => {
-    // SIMULAÇÃO DE FETCH DO SPRING BOOT (Descomente no projeto real)
-    /*
-    fetch('http://localhost:8080/api/tasks')
-      .then(res => res.json())
-      .then(data => setTasks(data))
-      .catch(err => console.error("Erro ao buscar tarefas", err));
-    */
-
-    // Dados Mockados para apresentação
-    setTasks([
-      {
-        id: 1,
-        title: "Estudar Spring Security",
-        description: "Revisar JWT e OAuth2",
-        status: STATUS.PENDENTE,
-      },
-      {
-        id: 2,
-        title: "Criar repositório no GitHub",
-        description: "Subir o código do backend e frontend",
-        status: STATUS.EM_ANDAMENTO,
-      },
-      {
-        id: 3,
-        title: "Modelar Banco de Dados",
-        description: "Criar diagrama ER das entidades",
-        status: STATUS.CONCLUIDA,
-      },
-    ]);
+    fetch(API_URL)
+      .then((res) => {
+        if (!res.ok) throw new Error("Erro na rede");
+        return res.json();
+      })
+      .then((data) => setTasks(data))
+      .catch((err) => {
+        console.error("Erro ao buscar tarefas. O backend está rodando?", err);
+      });
   }, []);
 
+  // 2. Criar nova tarefa (POST)
   const handleCreateTask = (e) => {
     e.preventDefault();
     if (!title.trim()) return;
 
-    const newTask = {
-      title,
-      description,
-      status: STATUS.PENDENTE,
-    };
-
+    const newTask = { title, description, status: STATUS.PENDENTE };
     setLoading(true);
 
-    // SIMULAÇÃO DO POST PARA O SPRING BOOT
-    /*
-    fetch('http://localhost:8080/api/tasks', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newTask)
+    fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newTask),
     })
-    .then(res => res.json())
-    .then(createdTask => setTasks([...tasks, createdTask]))
-    .finally(() => setLoading(false));
-    */
-
-    // Lógica local para preview
-    setTimeout(() => {
-      setTasks([...tasks, { ...newTask, id: Date.now() }]);
-      setTitle("");
-      setDescription("");
-      setLoading(false);
-    }, 500);
+      .then((res) => res.json())
+      .then((createdTask) => {
+        setTasks([...tasks, createdTask]);
+        setTitle("");
+        setDescription("");
+      })
+      .catch((err) => console.error("Erro ao criar tarefa", err))
+      .finally(() => setLoading(false));
   };
 
+  // 3. Atualizar status da tarefa (PUT)
   const handleUpdateStatus = (id, currentStatus) => {
     let newStatus;
     if (currentStatus === STATUS.PENDENTE) newStatus = STATUS.EM_ANDAMENTO;
@@ -98,36 +69,31 @@ export default function App() {
       newStatus = STATUS.CONCLUIDA;
     else return;
 
-    // SIMULAÇÃO DO PUT PARA O SPRING BOOT
-    /*
-    const taskToUpdate = tasks.find(t => t.id === id);
-    fetch(`http://localhost:8080/api/tasks/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...taskToUpdate, status: newStatus })
-    }).then(() => { ... atualizar estado ... })
-    */
+    const taskToUpdate = tasks.find((t) => t.id === id);
 
-    // Lógica local
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, status: newStatus } : task,
-      ),
-    );
+    fetch(`${API_URL}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...taskToUpdate, status: newStatus }),
+    })
+      .then((res) => res.json())
+      .then((updatedTask) => {
+        setTasks(tasks.map((task) => (task.id === id ? updatedTask : task)));
+      })
+      .catch((err) => console.error("Erro ao atualizar tarefa", err));
   };
 
+  // 4. Deletar tarefa (DELETE)
   const handleDelete = (id) => {
-    // SIMULAÇÃO DO DELETE PARA O SPRING BOOT
-    /*
-    fetch(`http://localhost:8080/api/tasks/${id}`, { method: 'DELETE' })
-      .then(() => setTasks(tasks.filter(t => t.id !== id)));
-    */
-
-    // Lógica local
-    setTasks(tasks.filter((t) => t.id !== id));
+    fetch(`${API_URL}/${id}`, { method: "DELETE" })
+      .then(() => {
+        setTasks(tasks.filter((t) => t.id !== id));
+      })
+      .catch((err) => console.error("Erro ao deletar tarefa", err));
   };
 
   // Função auxiliar para renderizar as colunas do Kanban
+
   const renderColumn = (
     statusLabel,
     statusValue,
@@ -206,6 +172,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-white font-sans text-gray-900 selection:bg-indigo-100">
       {/* Header */}
+
       <header className="bg-indigo-600 text-white shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center gap-3">
           <div className="p-2 bg-white/10 rounded-lg">
@@ -221,7 +188,6 @@ export default function App() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Formulário de Nova Tarefa */}
         <section className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
           <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
             <Plus className="w-5 h-5 text-indigo-600" />
@@ -261,6 +227,7 @@ export default function App() {
         </section>
 
         {/* Quadro Kanban */}
+
         <section className="flex flex-col md:flex-row gap-6 items-start">
           {renderColumn(
             "Pendente",
