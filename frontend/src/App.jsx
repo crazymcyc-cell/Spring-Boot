@@ -17,7 +17,7 @@ const STATUS = {
 };
 
 // URL do Backend rodando localmente
-const API_URL = "http://localhost:8080/api/tasks";
+const API_URL = "https://spring-boot-i9mm.onrender.com";
 
 export default function App() {
   const [tasks, setTasks] = useState([]);
